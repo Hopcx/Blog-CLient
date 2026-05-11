@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Avatar, Dropdown } from 'antd'
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
+import { UserOutlined, LogoutOutlined, EditOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../../store'
 import { logout } from '../../store/slices/authSlice'
@@ -16,6 +16,13 @@ const Header = () => {
   }
 
   const menuItems = [
+    {
+      key: 'create',
+      icon: <EditOutlined />,
+      label: 'Viết bài',
+      onClick: () => navigate('/posts/create'),
+    },
+    { type: 'divider' as const },
     {
       key: 'logout',
       icon: <LogoutOutlined />,
@@ -37,12 +44,24 @@ const Header = () => {
           </Link>
 
           {isAuthenticated ? (
-            <Dropdown menu={{ items: menuItems }} placement="bottomRight">
-              <div className="flex items-center gap-2 cursor-pointer">
-                <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
-                <span className="text-gray-700">{user?.displayName || user?.username}</span>
-              </div>
-            </Dropdown>
+            <div className="flex items-center gap-3">
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={() => navigate('/posts/create')}
+              >
+                Viết bài
+              </Button>
+
+              <Dropdown menu={{ items: menuItems }} placement="bottomRight">
+                <div className="flex items-center gap-2 cursor-pointer">
+                  <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
+                  <span className="text-gray-700">
+                    {user?.displayName || user?.username}
+                  </span>
+                </div>
+              </Dropdown>
+            </div>
           ) : (
             <div className="flex gap-2">
               <Button onClick={() => navigate('/login')}>Đăng nhập</Button>
