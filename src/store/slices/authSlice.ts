@@ -7,17 +7,41 @@ interface AuthState {
   isAuthenticated: boolean
 }
 
+// ← Fix: parse an toàn, không crash khi null/undefined
+const parseUser = (): User | null => {
+  try {
+    const raw = localStorage.getItem('user')
+    if (!raw || raw === 'undefined' || raw === 'null') return null
+    return JSON.parse(raw) as User
+  } catch {
+    return null
+  }
+}
+
+const parseToken = (): string | null => {
+  try {
+    const token = localStorage.getItem('token')
+    if (!token || token === 'undefined' || token === 'null') return null
+    return token
+  } catch {
+    return null
+  }
+}
+
 const initialState: AuthState = {
-  user: JSON.parse(localStorage.getItem('user') || 'null'),
-  token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),
+  user: parseUser(),
+  token: parseToken(),
+  isAuthenticated: !!parseToken(),
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: User; token: string }>) => {
+    setCredentials: (
+      state,
+      action: PayloadAction<{ user: User; token: string }>
+    ) => {
       state.user = action.payload.user
       state.token = action.payload.token
       state.isAuthenticated = true
