@@ -2,10 +2,23 @@ import axiosInstance from '../api/axiosInstance'
 import { type Post, type PagedResult, type CreatePostRequest } from '../types/post'
 
 export const postService = {
-  getPosts: async (page = 1, pageSize = 10, status?: string)
-    : Promise<PagedResult<Post>> => {
+  getPosts: async (
+    page = 1,
+    pageSize = 10,
+    status?: string,
+    search?: string,      // ← thêm
+    categoryId?: string,  // ← thêm
+    tag?: string          // ← thêm
+  ): Promise<PagedResult<Post>> => {
     const res = await axiosInstance.get('/posts', {
-      params: { page, pageSize, status }
+      params: {
+        page,
+        pageSize,
+        status,
+        search,
+        categoryId,
+        tag
+      }
     })
     return res.data
   },
