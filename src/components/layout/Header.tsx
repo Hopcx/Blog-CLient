@@ -1,6 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Avatar, Dropdown } from 'antd'
-import { UserOutlined, LogoutOutlined, EditOutlined } from '@ant-design/icons'
+import {
+  UserOutlined,
+  LogoutOutlined,
+  EditOutlined,
+  ProfileOutlined
+} from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../../store'
 import { logout } from '../../store/slices/authSlice'
@@ -16,6 +21,12 @@ const Header = () => {
   }
 
   const menuItems = [
+    {
+      key: 'profile',
+      icon: <ProfileOutlined />,
+      label: 'Trang cá nhân',
+      onClick: () => navigate('/profile'),
+    },
     {
       key: 'create',
       icon: <EditOutlined />,
@@ -54,9 +65,9 @@ const Header = () => {
               </Button>
 
               <Dropdown menu={{ items: menuItems }} placement="bottomRight">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
                   <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
-                  <span className="text-gray-700">
+                  <span className="text-gray-700 hidden sm:block">
                     {user?.displayName || user?.username}
                   </span>
                 </div>

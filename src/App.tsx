@@ -9,6 +9,8 @@ import PostDetail from './pages/PostDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import CreatePost from './pages/CreatePost'
+import EditPost from './pages/EditPost'
+import Profile from './pages/Profile'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,16 +28,20 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<MainLayout />}>
-              {/* Public routes */}
+              {/* Public */}
               <Route path="/" element={<Home />} />
-              <Route path="/posts/:slug" element={<PostDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
-              {/* Protected routes */}
+              {/* Protected */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/posts/create" element={<CreatePost />} />
+                <Route path="/posts/:slug/edit" element={<EditPost />} />
+                <Route path="/profile" element={<Profile />} />
               </Route>
+
+              {/* Slug — đặt cuối cùng */}
+              <Route path="/posts/:slug" element={<PostDetail />} />
             </Route>
           </Routes>
         </BrowserRouter>
