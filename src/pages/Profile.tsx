@@ -1,16 +1,18 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../store'
-import { Avatar, Card, Tag, Tabs } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import {  Card, Tag, Tabs, message } from 'antd'
+//import { UserOutlined } from '@ant-design/icons'
 import { usePosts } from '../hooks/usePosts'
 import PostCard from '../components/post/PostCard'
 import { Navigate } from 'react-router-dom'
+import ImageUpload from '../components/common/ImageUpload'
+import { setCredentials } from '../store/slices/authSlice'
+//import axiosInstance from '../api/axiosInstance'
 
 const Profile = () => {
-  const { user, isAuthenticated } = useSelector((s: RootState) => s.auth)
+  const dispatch = useDispatch()
+  const { user, isAuthenticated, token } = useSelector((s: RootState) => s.auth)
 
-  // Lấy tất cả bài viết — filter theo author ở FE
-  // (Sau này có thể thêm API /posts?authorId=xxx)
   const { data: publishedPosts } = usePosts(1, 100, 'Published')
   const { data: draftPosts } = usePosts(1, 100, 'Draft')
 
@@ -23,6 +25,20 @@ const Profile = () => {
   const myDrafts = draftPosts?.items.filter(
     p => p.author.id === user.id
   ) || []
+
+  const handleAvatarChange = async (url: string) => {
+    try {
+      // Cập nhật avatar lên BE (sẽ làm sau)
+      // Tạm thời update Redux store
+      dispatch(setCredentials({
+        user: { ...user, avatarUrl: url },
+        token: token!
+      }))
+      message.success('Cập nhật avatar thành công!')
+    } catch {
+      message.error('Cập nhật thất bại!')
+    }
+  }
 
   const tabItems = [
     {
@@ -66,13 +82,14 @@ const Profile = () => {
       {/* Profile card */}
       <Card className="mb-8">
         <div className="flex items-center gap-6">
-          <Avatar
-            size={80}
-            icon={<UserOutlined />}
-            src={user.avatarUrl}
-            className="flex-shrink-0"
+          {/* Avatar upload */}
+          <ImageUpload
+            type="avatar"
+            value={user.avatarUrl}
+            onChange={handleAvatarChange}
           />
-          <div>
+
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-800">
               {user.displayName || user.username}
             </h1>
@@ -89,7 +106,7 @@ const Profile = () => {
         </div>
       </Card>
 
-      {/* My posts tabs */}
+      {/* My posts */}
       <Card>
         <h2 className="text-lg font-semibold text-gray-800 mb-2">
           Bài viết của tôi

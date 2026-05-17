@@ -8,8 +8,9 @@ import { type RootState } from '../store'
 import { useCreatePost } from '../hooks/usePosts'
 import { useCategories } from '../hooks/useCategories'
 import { type Category } from '../types/category'
-
+import ImageUpload from '../components/common/ImageUpload'
 const { TextArea } = Input
+
 
 // ← Định nghĩa rõ type thay vì any
 interface CreatePostFormValues {
@@ -118,11 +119,22 @@ const CreatePost = () => {
             />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Thumbnail URL"
             name="thumbnailUrl"
           >
             <Input placeholder="https://example.com/image.jpg" />
+          </Form.Item> */}
+          <Form.Item
+            label="Ảnh thumbnail"
+            name="thumbnailUrl"
+          >
+            <ImageUpload
+              type="image"
+              placeholder="Upload ảnh thumbnail"
+              onChange={(url) => form.setFieldValue('thumbnailUrl', url)}
+              value={form.getFieldValue('thumbnailUrl')}
+            />
           </Form.Item>
 
           <Form.Item
