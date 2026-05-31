@@ -2,3 +2,212 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Rich Text Editor ===== */
+.rich-editor .ql-container {
+  @apply text-base font-sans;
+  min-height: 400px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.rich-editor .ql-toolbar {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  @apply bg-gray-50 border-gray-200;
+  flex-wrap: wrap;
+}
+
+.rich-editor .ql-editor {
+  min-height: 400px;
+  @apply text-gray-800 leading-8;
+  font-size: 16px;
+}
+
+.rich-editor .ql-editor p {
+  @apply mb-4;
+}
+
+.rich-editor .ql-editor h1 {
+  @apply text-3xl font-bold mb-4 mt-8;
+}
+
+.rich-editor .ql-editor h2 {
+  @apply text-2xl font-bold mb-3 mt-6;
+}
+
+.rich-editor .ql-editor h3 {
+  @apply text-xl font-semibold mb-2 mt-4;
+}
+
+.rich-editor .ql-editor blockquote {
+  @apply border-l-4 border-blue-400 pl-4 italic
+         text-gray-600 bg-blue-50 py-2 pr-4 my-4
+         rounded-r-lg;
+}
+
+.rich-editor .ql-editor pre {
+  @apply bg-gray-900 text-gray-100 rounded-xl p-4 my-4 overflow-x-auto;
+}
+
+.rich-editor .ql-editor img {
+  @apply rounded-xl my-4 max-w-full;
+}
+
+.rich-editor .ql-editor.ql-blank::before {
+  @apply text-gray-400 italic;
+}
+
+/* Dark mode editor */
+.dark .rich-editor .ql-toolbar {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .rich-editor .ql-container {
+  @apply border-gray-700;
+}
+
+.dark .rich-editor .ql-editor {
+  @apply text-gray-100 bg-gray-900;
+}
+
+.dark .rich-editor .ql-toolbar .ql-stroke {
+  stroke: #9ca3af;
+}
+
+.dark .rich-editor .ql-toolbar .ql-fill {
+  fill: #9ca3af;
+}
+
+.dark .rich-editor .ql-toolbar .ql-picker {
+  @apply text-gray-400;
+}
+
+/* ===== Dark Mode ===== */
+.dark body {
+  @apply bg-gray-950 text-gray-100;
+}
+
+.dark .post-card {
+  @apply bg-gray-900 border-gray-800 hover:border-gray-700;
+}
+
+.dark .post-card h2 {
+  @apply text-gray-100;
+}
+
+.dark .post-card p {
+  @apply text-gray-400;
+}
+
+.dark header {
+  @apply bg-gray-900/80 border-gray-800;
+}
+
+.dark footer {
+  @apply bg-gray-900 border-gray-800;
+}
+
+/* Ant Design dark overrides */
+.dark .ant-card {
+  @apply bg-gray-900 border-gray-800;
+}
+
+.dark .ant-input {
+  @apply bg-gray-800 border-gray-700 text-gray-100;
+}
+
+.dark .ant-select-selector {
+  @apply bg-gray-800 border-gray-700 text-gray-100;
+}
+
+.dark .ant-btn-default {
+  @apply bg-gray-800 border-gray-700 text-gray-100;
+}
+
+/* ===== TipTap Editor ===== */
+html {
+  scroll-padding-top: 4rem;
+}
+
+.tiptap-editor .ProseMirror {
+  @apply pt-16 px-4 pb-4 min-h-[400px] outline-none text-gray-800;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.tiptap-editor .ProseMirror p {
+  @apply mb-4;
+}
+
+.tiptap-editor .ProseMirror h1 {
+  @apply text-3xl font-bold mb-4 mt-8 text-gray-900;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  @apply text-2xl font-bold mb-3 mt-6 text-gray-900;
+}
+
+.tiptap-editor .ProseMirror h3 {
+  @apply text-xl font-semibold mb-2 mt-4 text-gray-900;
+}
+
+.tiptap-editor .ProseMirror ul {
+  @apply list-disc pl-6 mb-4 space-y-1;
+}
+
+.tiptap-editor .ProseMirror ol {
+  @apply list-decimal pl-6 mb-4 space-y-1;
+}
+
+.tiptap-editor .ProseMirror blockquote {
+  @apply border-l-4 border-blue-400 pl-4 italic
+         text-gray-600 bg-blue-50 py-2 pr-4 my-4 rounded-r-lg;
+}
+
+.tiptap-editor .ProseMirror pre {
+  @apply bg-gray-900 text-gray-100 rounded-xl p-4 my-4 overflow-x-auto;
+  font-family: 'Fira Code', monospace;
+}
+
+.tiptap-editor .ProseMirror code {
+  @apply bg-gray-100 text-red-500 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.tiptap-editor .ProseMirror pre code {
+  @apply bg-transparent text-gray-100 p-0;
+}
+
+.tiptap-editor .ProseMirror img {
+  @apply rounded-xl my-4 max-w-full cursor-pointer;
+}
+
+.tiptap-editor .ProseMirror mark {
+  @apply bg-yellow-200 rounded px-0.5;
+}
+
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-gray-400;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Dark mode */
+.dark .tiptap-editor .ProseMirror {
+  @apply text-gray-100;
+}
+
+.dark .tiptap-editor .ProseMirror h1,
+.dark .tiptap-editor .ProseMirror h2,
+.dark .tiptap-editor .ProseMirror h3 {
+  @apply text-gray-100;
+}
+
+.dark .tiptap-editor .ProseMirror blockquote {
+  @apply bg-blue-900/30 text-gray-300;
+}
+
+.dark .tiptap-editor .ProseMirror code {
+  @apply bg-gray-800 text-red-400;
+}

@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
+import { useState } from 'react'
 import { Form, Input, Button, Select, message, Card, Switch, Skeleton } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -7,6 +8,10 @@ import { useCategories } from '../hooks/useCategories'
 import { usePostDetail } from '../hooks/usePostDetail'
 import { postService } from '../services/postService'
 import { type Category } from '../types/category'
+// Thêm import
+import RichTextEditor from '../components/common/RichTextEditor'
+import ImageUpload from '../components/common/ImageUpload'
+
 
 const { TextArea } = Input
 
@@ -43,7 +48,8 @@ const EditPost = () => {
   const { data: post, isLoading: postLoading } = usePostDetail(slug!)
   const { data: categories } = useCategories()
   const [submitting, setSubmitting] = useState(false)
-
+  const content = useRef<string>('')
+ const [contentError, setContentError] = useState('')
   const categoryOptions = useMemo(
     () => flattenCategories(categories || []),
     [categories]
@@ -67,6 +73,7 @@ const EditPost = () => {
       categoryIds: matchedCategoryIds,
       isPublished: post.status === 'Published', // ← đưa vào form
     })
+    //setContent(post.content)  // ← load content vào editor
   }, [post, categories, form])
 
   // Kiểm tra quyền
@@ -78,32 +85,37 @@ const EditPost = () => {
   }, [post, user, navigate])
 
   const onFinish = async (values: EditPostFormValues) => {
-    if (!post || !user) return
-    setSubmitting(true)
+  if (!post || !user) return
 
-    try {
-      const result = await postService.updatePost(post.id, {
-        title: values.title,
-        content: values.content,
-        excerpt: values.excerpt,
-        thumbnailUrl: values.thumbnailUrl,
-        status: values.isPublished ? 'Published' : 'Draft', // ← đọc từ form
-        authorId: user.id,
-        tagNames: values.tags
-          ? values.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
-          : [],
-        categoryIds: values.categoryIds || [],
-      })
-
-      message.success('Cập nhật bài viết thành công!')
-      navigate(`/posts/${result.slug}`)
-    } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } }
-      message.error(error?.response?.data?.message || 'Có lỗi xảy ra!')
-    } finally {
-      setSubmitting(false)
-    }
+  if (!content.current || content.current === '<p><br></p>') {
+    setContentError('Vui lòng nhập nội dung!')
+    return
   }
+
+  setSubmitting(true)
+  try {
+    const result = await postService.updatePost(post.id, {
+      title: values.title,
+      content: content.current,  // ← dùng ref
+      excerpt: values.excerpt,
+      thumbnailUrl: values.thumbnailUrl,
+      status: values.isPublished ? 'Published' : 'Draft',
+      authorId: user.id,
+      tagNames: values.tags
+        ? values.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
+        : [],
+      categoryIds: values.categoryIds || [],
+    })
+
+    message.success('Cập nhật thành công!')
+    navigate(`/posts/${result.slug}`)
+  } catch (err: unknown) {
+    const error = err as { response?: { data?: { message?: string } } }
+    message.error(error?.response?.data?.message || 'Có lỗi xảy ra!')
+  } finally {
+    setSubmitting(false)
+  }
+}
 
   if (postLoading) return <Skeleton active paragraph={{ rows: 10 }} />
 
@@ -141,21 +153,44 @@ const EditPost = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            label="Nội dung"
-            name="content"
-            rules={[{ required: true, message: 'Vui lòng nhập nội dung' }]}
-          >
-            <TextArea
-              placeholder="Nội dung bài viết..."
-              autoSize={{ minRows: 10, maxRows: 30 }}
-              className="font-mono"
+           {/* Content editor — dùng key để reset khi post load xong */}
+          <Form.Item label="Nội dung" required>
+            <RichTextEditor
+              key={post?.id}              // ← key thay đổi khi post load → editor reset
+              value={post?.content || ''} // ← dùng post.content trực tiếp
+              onChange={(val) => {
+                content.current = val     // ← lưu vào ref thay vì state
+                if (val && val !== '<p><br></p>') setContentError('')
+              }}
             />
+            {contentError && (
+              <p className="text-red-500 text-sm mt-1">{contentError}</p>
+            )}
           </Form.Item>
+          {/* Content editor — dùng key để reset khi post load xong */}
+<Form.Item label="Nội dung" required>
+  <RichTextEditor
+    key={post?.id}              // ← key thay đổi khi post load → editor reset
+    value={post?.content || ''} // ← dùng post.content trực tiếp
+    onChange={(val) => {
+      content.current = val     // ← lưu vào ref thay vì state
+      if (val && val !== '<p><br></p>') setContentError('')
+    }}
+  />
+  {contentError && (
+    <p className="text-red-500 text-sm mt-1">{contentError}</p>
+  )}
+</Form.Item>
 
-          <Form.Item label="Thumbnail URL" name="thumbnailUrl">
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item>
+
+<Form.Item label="Ảnh thumbnail" name="thumbnailUrl">
+  <ImageUpload
+    type="image"
+    placeholder="Upload ảnh thumbnail"
+    onChange={(url) => form.setFieldValue('thumbnailUrl', url)}
+    value={form.getFieldValue('thumbnailUrl')}
+  />
+</Form.Item>
 
           <Form.Item label="Tags (phân cách bằng dấu phẩy)" name="tags">
             <Input placeholder="react, dotnet, cleanarchitecture" />

@@ -10,7 +10,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../../store'
 import { logout } from '../../store/slices/authSlice'
 
+import { useTheme } from '../../hooks/useTheme'
+import { SunOutlined, MoonOutlined } from '@ant-design/icons'
+
+
 const Header = () => {
+  const { theme, toggleTheme } = useTheme()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isAuthenticated, user } = useSelector((s: RootState) => s.auth)
@@ -64,14 +69,24 @@ const Header = () => {
                 Viết bài
               </Button>
 
-              <Dropdown menu={{ items: menuItems }} placement="bottomRight">
-                <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-                  <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
-                  <span className="text-gray-700 hidden sm:block">
-                    {user?.displayName || user?.username}
-                  </span>
-                </div>
-              </Dropdown>
+              {/* Nút theme ở bên ngoài Dropdown */}
+            <Button
+              type="text"
+              icon={theme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+              onClick={toggleTheme}
+              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100"
+              title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
+            />
+
+            {/* Dropdown chỉ bao quanh avatar và tên người dùng */}
+            <Dropdown menu={{ items: menuItems }} placement="bottomRight">
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
+                <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
+                <span className="text-gray-700 hidden sm:block">
+                  {user?.displayName || user?.username}
+                </span>
+              </div>
+            </Dropdown>
             </div>
           ) : (
             <div className="flex gap-2">

@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import {
-  Form, Input, Button, Select, message, Card, Switch
-} from 'antd'
+import { Form, Input, Button, Select, message, Card, Switch } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { type RootState } from '../store'
@@ -9,13 +7,12 @@ import { useCreatePost } from '../hooks/usePosts'
 import { useCategories } from '../hooks/useCategories'
 import { type Category } from '../types/category'
 import ImageUpload from '../components/common/ImageUpload'
+import RichTextEditor from '../components/common/RichTextEditor'  // ← thêm
+
 const { TextArea } = Input
 
-
-// ← Định nghĩa rõ type thay vì any
 interface CreatePostFormValues {
   title: string
-  content: string
   excerpt?: string
   thumbnailUrl?: string
   tags?: string
@@ -27,6 +24,16 @@ interface CategoryOption {
   label: string
 }
 
+const flattenCategories = (
+  cats: Category[],
+  prefix = ''
+): CategoryOption[] => {
+  return cats.flatMap(cat => [
+    { value: cat.id, label: `${prefix}${cat.name}` },
+    ...flattenCategories(cat.children || [], `── `)
+  ])
+}
+
 const CreatePost = () => {
   const [form] = Form.useForm<CreatePostFormValues>()
   const navigate = useNavigate()
@@ -34,27 +41,25 @@ const CreatePost = () => {
   const { mutateAsync, isPending } = useCreatePost()
   const { data: categories } = useCategories()
   const [isPublished, setIsPublished] = useState(false)
-
-  // Flatten category tree → options cho Select
-  const flattenCategories = (
-    cats: Category[],
-    prefix = ''
-  ): CategoryOption[] => {
-    return cats.flatMap(cat => [
-      { value: cat.id, label: `${prefix}${cat.name}` },
-      ...flattenCategories(cat.children || [], `${prefix}${cat.name} / `)
-    ])
-  }
+  const [content, setContent] = useState('')       // ← state riêng cho editor
+  const [contentError, setContentError] = useState('')
 
   const categoryOptions = flattenCategories(categories || [])
 
   const onFinish = async (values: CreatePostFormValues) => {
     if (!user) return
 
+    // Validate content
+    if (!content || content === '<p><br></p>') {
+      setContentError('Vui lòng nhập nội dung bài viết!')
+      return
+    }
+    setContentError('')
+
     try {
       const result = await mutateAsync({
         title: values.title,
-        content: values.content,
+        content,                    // ← HTML từ editor
         excerpt: values.excerpt,
         thumbnailUrl: values.thumbnailUrl,
         status: isPublished ? 'Published' : 'Draft',
@@ -74,7 +79,7 @@ const CreatePost = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <Card>
         <h1 className="text-2xl font-bold text-gray-800 mb-6">
           ✍️ Tạo bài viết mới
@@ -84,6 +89,7 @@ const CreatePost = () => {
           form={form}
           layout="vertical"
           onFinish={onFinish}
+          onFinishFailed={() => message.error('Vui lòng điền đầy đủ!')}
         >
           <Form.Item
             label="Tiêu đề"
@@ -93,42 +99,35 @@ const CreatePost = () => {
             <Input
               placeholder="Tiêu đề bài viết..."
               size="large"
-              className="text-lg"
+              className="text-xl font-semibold"
             />
           </Form.Item>
 
-          <Form.Item
-            label="Mô tả ngắn (Excerpt)"
-            name="excerpt"
-          >
+          <Form.Item label="Mô tả ngắn" name="excerpt">
             <TextArea
-              placeholder="Mô tả ngắn về bài viết..."
+              placeholder="Mô tả ngắn hiển thị ở trang chủ..."
               autoSize={{ minRows: 2, maxRows: 4 }}
             />
           </Form.Item>
 
-          <Form.Item
-            label="Nội dung"
-            name="content"
-            rules={[{ required: true, message: 'Vui lòng nhập nội dung' }]}
-          >
-            <TextArea
-              placeholder="Nội dung bài viết..."
-              autoSize={{ minRows: 10, maxRows: 30 }}
-              className="font-mono"
+          {/* Rich Text Editor */}
+          <Form.Item label="Nội dung bài viết" required>
+            <RichTextEditor
+              value={content}
+              onChange={(val) => {
+                setContent(val)
+                if (val && val !== '<p><br></p>') {
+                  setContentError('')
+                }
+              }}
+              placeholder="Viết nội dung bài viết tại đây..."
             />
+            {contentError && (
+              <p className="text-red-500 text-sm mt-1">{contentError}</p>
+            )}
           </Form.Item>
 
-          {/* <Form.Item
-            label="Thumbnail URL"
-            name="thumbnailUrl"
-          >
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item> */}
-          <Form.Item
-            label="Ảnh thumbnail"
-            name="thumbnailUrl"
-          >
+          <Form.Item label="Ảnh thumbnail" name="thumbnailUrl">
             <ImageUpload
               type="image"
               placeholder="Upload ảnh thumbnail"
@@ -137,17 +136,11 @@ const CreatePost = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            label="Tags (phân cách bằng dấu phẩy)"
-            name="tags"
-          >
+          <Form.Item label="Tags (phân cách bằng dấu phẩy)" name="tags">
             <Input placeholder="react, dotnet, cleanarchitecture" />
           </Form.Item>
 
-          <Form.Item
-            label="Danh mục"
-            name="categoryIds"
-          >
+          <Form.Item label="Danh mục" name="categoryIds">
             <Select
               mode="multiple"
               placeholder="Chọn danh mục..."
@@ -165,7 +158,7 @@ const CreatePost = () => {
             />
           </Form.Item>
 
-          <div className="flex gap-3 mt-4">
+          <div className="flex gap-3 mt-6">
             <Button
               type="primary"
               htmlType="submit"
@@ -174,10 +167,7 @@ const CreatePost = () => {
             >
               {isPublished ? '🚀 Xuất bản' : '💾 Lưu nháp'}
             </Button>
-            <Button
-              size="large"
-              onClick={() => navigate('/')}
-            >
+            <Button size="large" onClick={() => navigate('/')}>
               Huỷ
             </Button>
           </div>
