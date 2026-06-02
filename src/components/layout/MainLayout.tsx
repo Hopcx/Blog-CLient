@@ -9,7 +9,7 @@ const MainLayout = () => {
         <Outlet />
       </main>
       <footer className="bg-white border-t mt-16 py-6 text-center text-gray-500">
-        © 2025 BlogApp
+        © 2026 BlogApp
       </footer>
     </div>
   )
