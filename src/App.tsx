@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { ThemeProvider } from './context/ThemeProvider'
 import MainLayout from './components/layout/MainLayout'
+import EmptyLayout from './components/layout/EmptyLayout'
 import ProtectedRoute from './components/common/ProtectedRoute'
 import Home from './pages/Home'
 import PostDetail from './pages/PostDetail'
@@ -12,6 +13,7 @@ import Register from './pages/Register'
 import CreatePost from './pages/CreatePost'
 import EditPost from './pages/EditPost'
 import Profile from './pages/Profile'
+import Portfolio from './pages/Portfolio'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,20 +31,21 @@ function App() {
         <ThemeProvider>
           <BrowserRouter>
             <Routes>
+              <Route element={<EmptyLayout />}>
+                <Route path="/" element={<Portfolio />} />
+              </Route>
+
               <Route element={<MainLayout />}>
-                {/* Public */}
-                <Route path="/" element={<Home />} />
+                <Route path="/blog" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
-                {/* Protected */}
                 <Route element={<ProtectedRoute />}>
                   <Route path="/posts/create" element={<CreatePost />} />
                   <Route path="/posts/:slug/edit" element={<EditPost />} />
                   <Route path="/profile" element={<Profile />} />
                 </Route>
 
-                {/* Slug — đặt cuối cùng */}
                 <Route path="/posts/:slug" element={<PostDetail />} />
               </Route>
             </Routes>
