@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Avatar, Dropdown } from 'antd'
 import {
   UserOutlined,
   LogoutOutlined,
   EditOutlined,
-  ProfileOutlined
+  ProfileOutlined,
+  MenuOutlined,
+  CloseOutlined
 } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../../store'
@@ -19,6 +22,7 @@ const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isAuthenticated, user } = useSelector((s: RootState) => s.auth)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleLogout = () => {
     dispatch(logout())
@@ -54,7 +58,7 @@ const Header = () => {
           BlogApp
         </Link>
 
-        <nav className="flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-4">
           <Link to="/" className="text-gray-600 hover:text-blue-600">
             Trang chủ
           </Link>
@@ -69,24 +73,22 @@ const Header = () => {
                 Viết bài
               </Button>
 
-              {/* Nút theme ở bên ngoài Dropdown */}
-            <Button
-              type="text"
-              icon={theme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
-              onClick={toggleTheme}
-              className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100"
-              title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
-            />
+              <Button
+                type="text"
+                icon={theme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+                onClick={toggleTheme}
+                className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100"
+                title={theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
+              />
 
-            {/* Dropdown chỉ bao quanh avatar và tên người dùng */}
-            <Dropdown menu={{ items: menuItems }} placement="bottomRight">
-              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
-                <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
-                <span className="text-gray-700 hidden sm:block">
-                  {user?.displayName || user?.username}
-                </span>
-              </div>
-            </Dropdown>
+              <Dropdown menu={{ items: menuItems }} placement="bottomRight">
+                <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
+                  <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
+                  <span className="text-gray-700 hidden sm:block">
+                    {user?.displayName || user?.username}
+                  </span>
+                </div>
+              </Dropdown>
             </div>
           ) : (
             <div className="flex gap-2">
@@ -97,7 +99,112 @@ const Header = () => {
             </div>
           )}
         </nav>
+
+        <button
+          type="button"
+          className="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+        >
+          {mobileOpen ? <CloseOutlined /> : <MenuOutlined />}
+        </button>
       </div>
+
+      {mobileOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 px-4 py-4 space-y-3">
+          <Link
+            to="/"
+            onClick={() => setMobileOpen(false)}
+            className="block text-gray-700 hover:text-blue-600"
+          >
+            Trang chủ
+          </Link>
+
+          {isAuthenticated ? (
+            <>
+              <Button
+                block
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  navigate('/posts/create')
+                  setMobileOpen(false)
+                }}
+              >
+                Viết bài
+              </Button>
+
+              <Button
+                block
+                type="text"
+                icon={theme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+                onClick={() => {
+                  toggleTheme()
+                  setMobileOpen(false)
+                }}
+              >
+                {theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'}
+              </Button>
+
+              <div className="flex items-center gap-3 px-2 py-3 rounded-lg bg-gray-50">
+                <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">
+                    {user?.displayName || user?.username}
+                  </p>
+                  <p className="text-xs text-gray-500">Đã đăng nhập</p>
+                </div>
+              </div>
+
+              <Button
+                block
+                type="default"
+                icon={<ProfileOutlined />}
+                onClick={() => {
+                  navigate('/profile')
+                  setMobileOpen(false)
+                }}
+              >
+                Trang cá nhân
+              </Button>
+              <Button
+                block
+                type="default"
+                icon={<LogoutOutlined />}
+                onClick={() => {
+                  handleLogout()
+                  setMobileOpen(false)
+                }}
+              >
+                Đăng xuất
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                block
+                type="default"
+                onClick={() => {
+                  navigate('/login')
+                  setMobileOpen(false)
+                }}
+              >
+                Đăng nhập
+              </Button>
+              <Button
+                block
+                type="primary"
+                onClick={() => {
+                  navigate('/register')
+                  setMobileOpen(false)
+                }}
+              >
+                Đăng ký
+              </Button>
+            </>
+          )}
+        </div>
+      )}
     </header>
   )
 }
