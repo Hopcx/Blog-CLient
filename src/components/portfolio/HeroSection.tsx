@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { type AboutInfoDto } from '../../types/portfolio'
+import avtImage from '../../assets/avt.jpg'
 
 interface Props {
   about?: AboutInfoDto
@@ -24,28 +25,26 @@ const HeroSection = ({ about }: Props) => {
 
       <div className="relative z-10 text-center max-w-4xl mx-auto">
         {/* Avatar */}
-        {about?.avatarUrl && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', duration: 0.8 }}
-            className="mb-8 flex justify-center"
-          >
-            <div className="relative">
-              <img
-                src={about.avatarUrl}
-                alt={about.fullName}
-                className="w-32 h-32 rounded-full object-cover
-                           border-4 border-pink-500/50"
-              />
-              <div className="absolute inset-0 rounded-full
-                              bg-gradient-to-br from-pink-500/20 to-purple-500/20" />
-              {/* Online indicator */}
-              <div className="absolute bottom-2 right-2 w-4 h-4
-                              bg-green-400 rounded-full border-2 border-gray-950" />
-            </div>
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', duration: 0.8 }}
+          className="mb-8 flex justify-center"
+        >
+          <div className="relative">
+            <img
+              src={avtImage}
+              alt={about?.fullName || 'Avatar'}
+              className="w-32 h-32 rounded-full object-cover
+                         border-4 border-pink-500/50"
+            />
+            <div className="absolute inset-0 rounded-full
+                            bg-gradient-to-br from-pink-500/20 to-purple-500/20" />
+            {/* Online indicator */}
+            <div className="absolute bottom-2 right-2 w-4 h-4
+                            bg-green-400 rounded-full border-2 border-gray-950" />
+          </div>
+        </motion.div>
 
         {/* Greeting */}
         <motion.p

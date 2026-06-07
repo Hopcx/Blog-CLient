@@ -27,18 +27,18 @@ const CommentItem = ({ comment, postId }: Props) => {
 
       <div className="flex-1">
         {/* Comment bubble */}
-        <div className="bg-gray-50 rounded-2xl px-4 py-3">
-          <p className="font-semibold text-sm text-gray-800">
+        <div className="bg-gray-50 dark:bg-slate-800 rounded-2xl px-4 py-3">
+          <p className="font-semibold text-sm text-gray-800 dark:text-gray-100">
             {comment.author.displayName || comment.author.username}
           </p>
-          <p className="text-gray-700 mt-1 leading-relaxed">
+          <p className="text-gray-700 dark:text-gray-200 mt-1 leading-relaxed">
             {comment.content}
           </p>
         </div>
 
         {/* Actions */}
         <div className="flex gap-4 mt-1 px-2 items-center">
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-400 dark:text-gray-500">
             {new Date(comment.createdAt).toLocaleDateString('vi-VN')}
           </span>
           <Button
@@ -83,11 +83,11 @@ const CommentItem = ({ comment, postId }: Props) => {
                   className="flex-shrink-0 mt-1"
                 />
                 <div className="flex-1">
-                  <div className="bg-gray-50 rounded-2xl px-3 py-2">
-                    <p className="font-semibold text-xs text-gray-800">
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-2xl px-3 py-2">
+                    <p className="font-semibold text-xs text-gray-800 dark:text-gray-100">
                       {reply.author.displayName || reply.author.username}
                     </p>
-                    <p className="text-gray-700 text-sm mt-0.5">
+                    <p className="text-gray-700 dark:text-gray-200 text-sm mt-0.5">
                       {reply.content}
                     </p>
                   </div>

@@ -15,6 +15,12 @@ import EditPost from './pages/EditPost'
 import Profile from './pages/Profile'
 import Portfolio from './pages/Portfolio'
 
+import AdminLayout from './components/admin/AdminLayout'
+import AdminDashboard from './components/admin/AdminDashboard'
+import AdminProjects from './pages/admin/AdminProjects'
+import AdminSkills from './pages/admin/AdminSkills'
+import AdminAbout from './pages/admin/AdminAbout'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -44,6 +50,12 @@ function App() {
                   <Route path="/posts/create" element={<CreatePost />} />
                   <Route path="/posts/:slug/edit" element={<EditPost />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route element={<AdminLayout />}>
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/about" element={<AdminAbout />} />
+                  <Route path="/admin/projects" element={<AdminProjects />} />
+                  <Route path="/admin/skills" element={<AdminSkills />} />
+                </Route>
                 </Route>
 
                 <Route path="/posts/:slug" element={<PostDetail />} />

@@ -8,7 +8,7 @@ interface Props {
 
 const PostCard = ({ post }: Props) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
+    <div className="post-card bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
       {post.thumbnailUrl && (
         <img
           src={post.thumbnailUrl}
@@ -24,16 +24,16 @@ const PostCard = ({ post }: Props) => {
       </div>
 
       <Link to={`/posts/${post.slug}`}>
-        <h2 className="text-xl font-semibold text-gray-800 hover:text-blue-600 mb-2 line-clamp-2">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 mb-2 line-clamp-2">
           {post.title}
         </h2>
       </Link>
 
       {post.excerpt && (
-        <p className="text-gray-500 text-sm line-clamp-3 mb-4">{post.excerpt}</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-3 mb-4">{post.excerpt}</p>
       )}
 
-      <div className="flex items-center justify-between text-xs text-gray-400 mt-4">
+      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-4">
         <span>✍️ {post.author.displayName || post.author.username}</span>
         <span>👁 {post.viewCount}</span>
         <span>{new Date(post.createdAt).toLocaleDateString('vi-VN')}</span>
