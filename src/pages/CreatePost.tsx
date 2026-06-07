@@ -80,8 +80,8 @@ const CreatePost = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <Card>
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+      <Card className="dark:bg-slate-900">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           ✍️ Tạo bài viết mới
         </h1>
 

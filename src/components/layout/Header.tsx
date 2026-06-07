@@ -52,14 +52,14 @@ const Header = () => {
   ]
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-blue-600">
+        <Link to="/" className="text-xl font-bold text-blue-600 dark:text-sky-400">
           BlogApp
         </Link>
 
         <nav className="hidden md:flex items-center gap-4">
-          <Link to="/" className="text-gray-600 hover:text-blue-600">
+          <Link to="/" className="text-gray-600 dark:text-gray-200 hover:text-blue-600 dark:hover:text-sky-300">
             Trang chủ
           </Link>
 
@@ -84,7 +84,7 @@ const Header = () => {
               <Dropdown menu={{ items: menuItems }} placement="bottomRight">
                 <div className="flex items-center gap-2 cursor-pointer hover:opacity-80">
                   <Avatar icon={<UserOutlined />} src={user?.avatarUrl} />
-                  <span className="text-gray-700 hidden sm:block">
+                  <span className="text-gray-700 hidden sm:block dark:text-gray-200">
                     {user?.displayName || user?.username}
                   </span>
                 </div>
@@ -102,7 +102,7 @@ const Header = () => {
 
         <button
           type="button"
-          className="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none"
+          className="md:hidden text-gray-700 dark:text-gray-200 hover:text-blue-600 focus:outline-none"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
         >
@@ -111,11 +111,11 @@ const Header = () => {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 px-4 py-4 space-y-3">
+        <div className="md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700 px-4 py-4 space-y-3">
           <Link
             to="/"
             onClick={() => setMobileOpen(false)}
-            className="block text-gray-700 hover:text-blue-600"
+            className="block text-gray-700 dark:text-gray-200 hover:text-blue-600"
           >
             Trang chủ
           </Link>

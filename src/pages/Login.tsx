@@ -26,8 +26,8 @@ const Login = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
-      <Card className="w-full max-w-md shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+      <Card className="w-full max-w-md shadow-md dark:bg-slate-900">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
           Đăng nhập
         </h2>
 
@@ -63,9 +63,9 @@ const Login = () => {
           </Button>
         </Form>
 
-        <p className="text-center mt-4 text-gray-500">
+        <p className="text-center mt-4 text-gray-500 dark:text-gray-400">
           Chưa có tài khoản?{' '}
-          <Link to="/register" className="text-blue-600 font-medium">
+          <Link to="/register" className="text-blue-600 font-medium dark:text-sky-300">
             Đăng ký ngay
           </Link>
         </p>
