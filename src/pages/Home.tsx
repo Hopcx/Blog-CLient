@@ -56,12 +56,12 @@ const Home = () => {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Bài viết mới nhất</h1>
-        <p className="text-gray-500 mt-1">Khám phá những bài viết hay nhất</p>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Bài viết mới nhất</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">Khám phá những bài viết hay nhất</p>
       </div>
 
       {/* Search + Filter bar */}
-      <div className="flex flex-wrap gap-3 mb-8 bg-white p-4 rounded-xl shadow-sm">
+      <div className="flex flex-wrap gap-3 mb-8 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm dark:shadow-none">
         <Search
           placeholder="Tìm kiếm bài viết..."
           allowClear
@@ -105,8 +105,8 @@ const Home = () => {
 
       {/* Kết quả search */}
       {(search || categoryId || tag) && !isLoading && (
-        <p className="text-gray-500 mb-4 text-sm">
-          Tìm thấy <span className="font-semibold text-gray-800">{data?.total ?? 0}</span> kết quả
+        <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm">
+          Tìm thấy <span className="font-semibold text-gray-800 dark:text-gray-100">{data?.total ?? 0}</span> kết quả
           {search && <> cho "<span className="text-blue-600">{search}</span>"</>}
         </p>
       )}

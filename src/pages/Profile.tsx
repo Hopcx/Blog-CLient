@@ -80,7 +80,7 @@ const Profile = () => {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Profile card */}
-      <Card className="mb-8">
+      <Card className="mb-8 dark:bg-slate-900">
         <div className="flex items-center gap-6">
           {/* Avatar upload */}
           <ImageUpload
@@ -90,10 +90,10 @@ const Profile = () => {
           />
 
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {user.displayName || user.username}
             </h1>
-            <p className="text-gray-500 mt-1">{user.email}</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">{user.email}</p>
             <div className="flex gap-2 mt-2">
               <Tag color={user.role === 'Admin' ? 'red' : 'blue'}>
                 {user.role}
@@ -107,8 +107,8 @@ const Profile = () => {
       </Card>
 
       {/* My posts */}
-      <Card>
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+      <Card className="dark:bg-slate-900">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
           Bài viết của tôi
         </h2>
         <Tabs items={tabItems} />

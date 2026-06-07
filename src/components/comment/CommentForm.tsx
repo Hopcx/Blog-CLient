@@ -50,7 +50,7 @@ const CommentForm = ({
         onChange={(e) => setContent(e.target.value)}
         placeholder={placeholder}
         autoSize={{ minRows: 2, maxRows: 5 }}
-        className="flex-1"
+        className="flex-1 dark:bg-slate-800 dark:border-gray-700 dark:text-white"
       />
       <Button
         type="primary"

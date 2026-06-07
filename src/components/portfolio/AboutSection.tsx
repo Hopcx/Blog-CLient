@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { type AboutInfoDto } from '../../types/portfolio'
+import avtImage from '../../assets/avt.jpg'
 
 interface Props {
   about?: AboutInfoDto
@@ -52,12 +53,12 @@ const AboutSection = ({ about }: Props) => {
                              border border-pink-500/30"
                 />
               ) : (
-                <div className="w-72 h-72 rounded-2xl bg-gradient-to-br
-                                from-pink-500/20 to-purple-500/20
-                                border border-pink-500/30 flex items-center
-                                justify-center text-8xl">
-                  👨‍💻
-                </div>
+                <img
+                  src={avtImage}
+                  alt="Avatar"
+                  className="w-72 h-72 object-cover rounded-2xl
+                             border border-pink-500/30"
+                />
               )}
               {/* Decoration */}
               <div className="absolute -bottom-4 -right-4 w-72 h-72
